@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Familiarity Task</title>
+
+  <!-- PapaParse for CSV parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+  <!-- Firebase + Experiment Logic -->
+  <script type="module" src="firebase-config.js"></script>
+  <script type="module" src="index.js"></script>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin: 50px;
+    }
+    #image-container,
+    #response-buttons,
+    #thank-you {
+      display: none;
+      margin-top: 20px;
+    }
+    img {
+      max-height: 300px;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      margin: 0 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Instructions -->
+  <div id="instructions">
+    <h2>Welcome to the Familiarity Form!</h2>
+
+    <p>Thank you for taking the time to fill out this survey.</p>
+    <p>This should take no more than 5 minutes to complete.</p>
+
+    <p>In this survey, you will see faces of various people.</p>
+    <p>We want to know if you recognize these people or not.</p>
+    <p>In other words, we want to know if the person is <strong>VISUALLY</strong> familiar to you.</p>
+
+    <p>
+      For example, even if you do not know a person that well,<br />
+      if you recognize their face and know you have seen them before,<br />
+      please mark that person as familiar.
+    </p>
+
+    <p>
+      If you do not recognize the person,<br />
+      and do not think you have ever seen them before,<br />
+      you can mark them as unfamiliar.
+    </p>
+
+    <p><em>Click below to begin.</em></p>
+    <button id="startBtn">Start Task</button>
+  </div>
+
+  <!-- Stimulus Display -->
+  <div id="image-container">
+    <img id="stimulus" src="" alt="Face image" />
+  </div>
+
+  <!-- Response Buttons -->
+  <div id="response-buttons">
+    <button id="yesBtn">Yes</button>
+    <button id="noBtn">No</button>
+  </div>
+
+  <!-- Completion Message -->
+  <div id="thank-you">
+    <h2>Thank you for completing the task!</h2>
+    <p>Your responses have been recorded.</p>
+  </div>
+</body>
+</html>
