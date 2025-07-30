@@ -8,14 +8,19 @@ const firebaseConfig = {
   apiKey: "AIzaSyArYEdzeo9qFGVoI9DwGaFJz6GTxDR70Is",
   authDomain: "familiarity-form.firebaseapp.com",
   projectId: "familiarity-form",
-  storageBucket: "familiarity-form.firebasestorage.app",
+  storageBucket: "familiarity-form.appspot.com", 
   messagingSenderId: "944921767554",
   appId: "1:944921767554:web:61b775d9b184320a0e4e9b",
   measurementId: "G-WRFW91ZYL0"
 };
 
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 
-// ✅ Save response (with nested response object)
+// Define db!
+const db = getFirestore(app);
+
+// Save response (with nested response object)
 export const saveResponse = async (subId, faceId, response) => {
   await addDoc(collection(db, "faceResponses"), {
     sub_id: subId,
