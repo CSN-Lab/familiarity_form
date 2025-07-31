@@ -20,7 +20,7 @@
     }
     #image-container,
     #response-buttons,
-    #thank-you {
+    #completion-message {
       display: none;
       margin-top: 20px;
     }
@@ -41,12 +41,16 @@
   <div id="instructions">
     <h2>Welcome to the Familiarity Form!</h2>
 
-    <p>Thank you for taking the time to fill out this survey.</p>
-    <p>This should take no more than 5 minutes to complete.</p>
+    <p>
+      Thank you for taking the time to fill out this survey.<br />
+      This should take no more than 5 minutes to complete.
+    </p>
 
-    <p>In this survey, you will see faces of various people.</p>
-    <p>We want to know if you recognize these people or not.</p>
-    <p>In other words, we want to know if the person is <strong>VISUALLY</strong> familiar to you.</p>
+    <p>
+      In this survey, you will see faces of various people.<br />
+      We want to know if you recognize these people or not.<br />
+      In other words, we want to know if the person is <strong>VISUALLY</strong> familiar to you.
+    </p>
 
     <p>
       For example, even if you do not know a person that well,<br />
@@ -67,6 +71,10 @@
   <!-- Stimulus Display -->
   <div id="image-container">
     <img id="stimulus" src="" alt="Face image" />
+
+    <!--Include instruction lines-->
+    <p style="margin-top: 30px;"><strong>Yes</strong> - I have seen this person before.</p>
+    <p><strong>No</strong> - I have <u>NOT</u> seen this person before.</p>
   </div>
 
   <!-- Response Buttons -->
@@ -76,7 +84,7 @@
   </div>
 
   <!-- Completion Message -->
-  <div id="thank-you">
+  <div id="completion-message">
     <h2>Thank you for completing the task!</h2>
     <p>Your responses have been recorded.</p>
   </div>

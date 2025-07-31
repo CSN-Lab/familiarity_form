@@ -51,9 +51,9 @@ function shuffleArray(array) {
 // === Display next image ===
 function showNextImage() {
     if (currentIndex >= faceData.length) {
-        alert("Task complete! Thank you.");
         imageContainer.style.display = "none";
         responseButtons.style.display = "none";
+        document.getElementById('completion-message').style.display = "block";
         return;
     }
 
