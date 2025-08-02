@@ -15,24 +15,41 @@
   <style>
     body {
       font-family: sans-serif;
-      background-color: #e0e0e0; /*light grey */
+      background-color: #e0e0e0; /* Slightly darker grey */
       text-align: center;
       margin: 100px;
     }
+
+    .option {
+      font-size: 18px;
+      cursor: pointer;
+      display: inline-block;
+      margin: 10px 0;
+    }
+
+    #continueBtn {
+      padding: 10px 25px;
+      font-size: 18px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
     #image-container,
-    #response-buttons,
+    #response-container,
     #completion-message {
       display: none;
       margin-top: 20px;
     }
+
     img {
       max-height: 300px;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
     }
+
     button {
       padding: 10px 20px;
       font-size: 18px;
-      margin: 0 15px;
+      margin: 0 10px;
     }
   </style>
 </head>
@@ -72,16 +89,23 @@
   <!-- Stimulus Display -->
   <div id="image-container">
     <img id="stimulus" src="" alt="Face image" />
-
-    <!--Include instruction lines-->
-    <p style="margin-top: 7px;"><strong>Yes</strong> - I have seen this person before.</p>
+    <p style="margin-top: 10px;"><strong>Yes</strong> - I have seen this person before.</p>
     <p><strong>No</strong> - I have <u>NOT</u> seen this person before.</p>
   </div>
 
-  <!-- Response Buttons -->
-  <div id="response-buttons">
-    <button id="yesBtn">Yes</button>
-    <button id="noBtn">No</button>
+  <!-- Response Options + Continue -->
+  <div id="response-container">
+    <div id="response-options">
+      <label class="option">
+        <input type="radio" name="familiarity" value="yes" />
+        Yes - I have seen this person before.
+      </label><br><br>
+      <label class="option">
+        <input type="radio" name="familiarity" value="no" />
+        No - I have <u>NOT</u> seen this person before.
+      </label>
+    </div>
+    <button id="continueBtn" disabled>Continue</button>
   </div>
 
   <!-- Completion Message -->
