@@ -1,6 +1,6 @@
 // firebase-config.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, updateDoc, arrayUnion, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -17,16 +17,35 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Define db!
+// Define db
 const db = getFirestore(app);
 
-// Save response (with nested response object)
-export const saveResponse = async (subId, faceId, response) => {
-  await addDoc(collection(db, "faceResponses"), {
-    sub_id: subId,
+// Save response
+export const saveResponse = async(subID, faceId, response) => {
+  const participantRef = doc(db, 'prod2026', subID); // In the db, create a collection for that year and one doc per participant
+
+  // Attach face ID and timestamp to the response
+  const responseEntry = {
     face_id: faceId,
-    response: response,          // includes answer, responseTime, timestamp
+    ...response,
     timestamp: Date.now()
-  });
-};
+  };
+
+  try {
+    await updateDoc(participantRef, {
+      responses: arrayUnion(responseEntry)
+    });
+  } catch (error) {
+    if (error.code ===  'not-found' || error.message.includes("No document to update")) {
+      // If participant doc doesn't exist, create it with initial response
+      await setDoc(participantRef, {
+        responses: [responseEntry]
+      });
+    } else {
+      console.error("Error saving response:", error);
+    }
+  };
+
+
+}
 
