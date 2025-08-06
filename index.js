@@ -41,7 +41,7 @@ startBtn.addEventListener("click", async () => {
         return;
       }
 
-      const previousResponses = await getPreviousResponse(subID);
+      const previousResponses = await getPreviousResponse(subID) || [];
       const seenFaceIds = new Set(previousResponses.map(r => r.face_id));
       faceData = faceData.filter(face => !seenFaceIds.has(face.face_id));
       currentIndex = previousResponses.length;
