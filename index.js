@@ -46,6 +46,11 @@ startBtn.addEventListener("click", async () => {
       faceData = faceData.filter(face => !seenFaceIds.has(face.face_id));
       currentIndex = previousResponses.length;
 
+      if (currentIndex > 0) {
+        alert("Click OK to continue the survey.");
+        return;
+      }
+
       shuffleArray(faceData); // Randomize presentation order
       document.getElementById("instructions").style.display = "none";
       imageContainer.style.display = "block";
