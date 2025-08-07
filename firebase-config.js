@@ -1,7 +1,6 @@
 // firebase-config.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
+import { getFirestore, doc, setDoc, updateDoc, arrayUnion, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -17,35 +16,15 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+// Define db
 const db = getFirestore(app);
 
-// check for previous response
-export const getPreviousResponse = async (subID) => {
-  const participantRef = doc(db, 'prod2026', subID);
-  const docSnap = await getDoc(participantRef);
-
-  if (docSnap.exists()){
-    const data = docSnap.data();
-    return Array.isArray(data.responses) ? data.responses : []; // return array if none exists
-  }
-}
-
-
-// check if participant has completed the survey
-export const checkIfCompleted = async (subID) => {
-  const participantRef = doc(db, 'prod2026', subID);
-  const docSnap = await getDoc(participantRef)
-
-  if (docSnap.exists() && docSnap.data().completed){
-    return true;
-  }
-  return false;
-};
-
-// save live responses
+// Save response
 export const saveResponse = async(subID, faceId, response) => {
-  const participantRef = doc(db, 'prod2026', subID);
+  const participantRef = doc(db, 'prod2026', subID); // In the db, create a collection for that year and one doc per participant
 
+  // Attach face ID and timestamp to the response
   const responseEntry = {
     face_id: faceId,
     ...response,
@@ -57,28 +36,15 @@ export const saveResponse = async(subID, faceId, response) => {
       responses: arrayUnion(responseEntry)
     });
   } catch (error) {
-    if (error.code === 'not-found' || error.message.includes("No document to update")) {
+    if (error.code ===  'not-found' || error.message.includes("No document to update")) {
+      // If participant doc doesn't exist, create it with initial response
       await setDoc(participantRef, {
         responses: [responseEntry]
       });
     } else {
-    console.error("Error saving response:", error);
+      console.error("Error saving response:", error);
     }
-  }
-};
+  };
 
-// finalize survey
 
-export const markSurveyComplete = async (subID) => {
-  const participantRef = doc(db, 'prod2026', subID);
-
-  try{
-    await updateDoc(participantRef, {
-      completed: true,
-      submittedAt: Date.now()
-    })
-  } catch (error){
-    console.error("Error finalizing the survey:", error)
-  }
 }
-

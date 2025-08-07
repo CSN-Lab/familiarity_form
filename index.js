@@ -1,5 +1,4 @@
-import { checkIfCompleted, saveResponse, getPreviousResponse } from './firebase-config.js';
-import { markSurveyComplete } from './firebase-config.js';
+import { saveResponse } from './firebase-config.js';
 
 // === Initialize variables ===
 let faceData = [];
@@ -13,9 +12,8 @@ const responseContainer = document.getElementById("response-container");
 const continueBtn = document.getElementById("continueBtn");
 const options = document.querySelectorAll("input[name='familiarity']");
 
-
 // === Start Task on Button Click ===
-startBtn.addEventListener("click", async () => {
+startBtn.addEventListener("click", () => {
   const urlParams = new URLSearchParams(window.location.search);
   subID = urlParams.get('subID');
 
@@ -24,30 +22,14 @@ startBtn.addEventListener("click", async () => {
     return;
   }
 
-  const alreadyCompleted = await checkIfCompleted(subID);
-  if (alreadyCompleted) {
-    alert("You have already completed this survey. Thank you!");
-    return;
-  }
-
   // === Load CSV and filter rows for this subject ===
   Papa.parse('data/subject_face_dictionary.csv', {
     download: true,
     header: true,
-    complete: async function (results) {
+    complete: function (results) {
       faceData = results.data.filter(row => row.sub_id === subID && row.face_id);
       if (faceData.length === 0) {
         alert("No face data found for subject: " + subID);
-        return;
-      }
-
-      const previousResponses = await getPreviousResponse(subID) || [];
-      const seenFaceIds = new Set(previousResponses.map(r => r.face_id));
-      faceData = faceData.filter(face => !seenFaceIds.has(face.face_id));
-      currentIndex = previousResponses.length;
-
-      if (currentIndex > 0) {
-        alert("Click OK to continue the survey.");
         return;
       }
 
@@ -74,7 +56,6 @@ function showNextImage() {
     imageContainer.style.display = "none";
     responseContainer.style.display = "none";
     document.getElementById('completion-message').style.display = "block";
-    markSurveyComplete(subID);
     return;
   }
 
@@ -95,7 +76,7 @@ options.forEach(option => {
   });
 });
 
-// === Handlex Continue button click ===
+// === Handle Continue button click ===
 continueBtn.addEventListener("click", async () => {
   const selected = [...options].find(opt => opt.checked);
   if (!selected) return;
@@ -105,11 +86,9 @@ continueBtn.addEventListener("click", async () => {
 
   await saveResponse(subID, faceID, {
     answer: selected.value,
-    index: currentIndex,
     timestamp: Date.now()
   });
 
   currentIndex++;
   showNextImage();
 });
-
