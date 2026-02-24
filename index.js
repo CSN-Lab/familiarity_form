@@ -15,7 +15,7 @@ const options = document.querySelectorAll("input[name='familiarity']");
 // === Start Task on Button Click ===
 startBtn.addEventListener("click", () => {
   const urlParams = new URLSearchParams(window.location.search);
-  subID = urlParams.get('subID');
+  subID = (urlParams.get('subID') || "").trim();
 
   if (!subID) {
     alert("No subject ID found in URL. Please check the link.");
@@ -27,7 +27,15 @@ startBtn.addEventListener("click", () => {
     download: true,
     header: true,
     complete: function (results) {
-      faceData = results.data.filter(row => row.sub_id === subID && row.face_id);
+
+      faceData = results.data
+        .map(row => ({
+          ...row,
+          sub_id: (row.sub_id || "").trim(),
+          face_id: (row.face_id || "").trim()
+        }))
+        .filter(row => row.sub_id === subID && row.face_id !== "");
+
       if (faceData.length === 0) {
         alert("No face data found for subject: " + subID);
         return;
@@ -60,8 +68,9 @@ function showNextImage() {
   }
 
   const currentFace = faceData[currentIndex];
-  const faceId = currentFace.face_id;
-  const imagePath = `stim/all_faces/${faceId}.png`;
+  const faceId = currentFace.face_id; // already trimmed above
+  const imagePath = `stim/all_faces/${encodeURIComponent(faceId)}.png`;
+
   stimulusImg.src = imagePath;
 
   // Reset radio buttons and disable Continue
@@ -82,7 +91,7 @@ continueBtn.addEventListener("click", async () => {
   if (!selected) return;
 
   const currentFace = faceData[currentIndex];
-  const faceID = currentFace.face_id;
+  const faceID = currentFace.face_id; // already trimmed
 
   await saveResponse(subID, faceID, {
     answer: selected.value,
